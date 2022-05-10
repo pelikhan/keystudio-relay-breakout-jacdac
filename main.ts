@@ -21,21 +21,27 @@ namespace modules {
     export const keystudioRelay4 = new RelayClient("keystudio relay 4?dev=self&srvo=3&name=COM4")
 }
 
+namespace userconfig { export const PIN_JACK_TX = 0xdead }
+
 namespace servers {
     function start() {
         jacdac.productIdentifier = 0x35b7e929
         jacdac.deviceDescription = "Keystudio Relay Board"
         jacdac.startSelfServers(() => {
+            led.enable(false)
             const servers: jacdac.Server[] =
                 [DigitalPin.P7, DigitalPin.P6, DigitalPin.P4, DigitalPin.P3]
-                    .map((pin, i) => jacdac.createActuatorServer(jacdac.SRV_RELAY, server => {
-                        const active = server.intensity > 0 ? 1 : 0
-                        pins.digitalWritePin(pin, active)
-                    }, {
-                        intensityPackFormat: jacdac.RelayRegPack.Active,
-                        instanceName: `COM${i + 1}`,
-                        variant: jacdac.RelayVariant.Electromechanical
-                    }))
+                    .map((pin, i) => {
+                        pins.digitalWritePin(pin, 0)
+                        return jacdac.createActuatorServer(jacdac.SRV_RELAY, server => {
+                            const active = server.intensity > 0 ? 1 : 0
+                            pins.digitalWritePin(pin, active)
+                        }, {
+                            intensityPackFormat: jacdac.RelayRegPack.Active,
+                            instanceName: `COM${i + 1}`,
+                            variant: jacdac.RelayVariant.Electromechanical
+                        })
+                    })
             return servers
         })
     }
