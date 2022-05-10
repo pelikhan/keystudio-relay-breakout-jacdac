@@ -29,8 +29,8 @@ namespace servers {
             const servers: jacdac.Server[] =
                 [DigitalPin.P7, DigitalPin.P6, DigitalPin.P4, DigitalPin.P3]
                     .map((pin, i) => jacdac.createActuatorServer(jacdac.SRV_RELAY, server => {
-                        const enabled = server.intensity > 0 ? 1 : 0
-                        pins.digitalWritePin(pin, enabled)
+                        const active = server.intensity > 0 ? 1 : 0
+                        pins.digitalWritePin(pin, active)
                     }, {
                         intensityPackFormat: jacdac.RelayRegPack.Active,
                         instanceName: `COM${i + 1}`,
