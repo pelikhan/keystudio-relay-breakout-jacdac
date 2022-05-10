@@ -4,6 +4,7 @@ forever(() => {
     modules.keystudioRelay2.setActive(k == 1)
     modules.keystudioRelay3.setActive(k == 2)
     modules.keystudioRelay4.setActive(k == 3)
-    pause(1000)
+    basic.showNumber(k + 1)
+    pause(2000)
     k = (k + 1) % 4
 })
